@@ -8,7 +8,7 @@
             "module": "vllm.entrypoints.openai.api_server",
             "args": [
                 "--model",
-                "Qwen/Qwen3-1.7B",
+                "/root/model/Qwen3-0.6B",
                 "--dtype",
                 "float16",
                 "--max-model-len",
@@ -29,9 +29,10 @@
             ],
             "env": {
                 // 可选：设置 CUDA_VISIBLE_DEVICES 控制 GPU 使用
-                // "CUDA_VISIBLE_DEVICES": "0,1",
+                "CUDA_VISIBLE_DEVICES": "0",
                 // 开启 vLLM 调试日志
                 "VLLM_LOGGING_LEVEL": "DEBUG",
+		        "VLLM_ENABLE_V1_MULTIPROCESSING": "0",
                 "PYTHONPATH": "${workspaceFolder}:${env:PYTHONPATH}"
             },
             "console": "integratedTerminal",
