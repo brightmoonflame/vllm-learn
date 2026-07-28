@@ -16,6 +16,9 @@ def client(client_id):
     identity = f"Client-{client_id}".encode("utf-8")
     socket.setsockopt(zmq.IDENTITY, identity)
 
+    # 【新增】设置接收超时，3秒没收到消息就抛 zmq.Again，不会一直卡住
+    socket.setsockopt(zmq.RCVTIMEO, 3000)
+
     socket.connect("tcp://localhost:6666")
     print(f"[Client {client_id}] 启动，连接到引擎...")
 
@@ -35,10 +38,10 @@ def client(client_id):
     # 接收响应（异步接收，顺序不一定与发送一致）
     for _ in range(5):
         try:
-            response = socket.recv_json()  # 非阻塞接收
+            response = socket.recv_json()
             print(f"[Client {client_id}] 收到响应: {response}")
         except zmq.Again:
-            time.sleep(2)
+            print(f"[Client {client_id}] 接收超时，跳过")
             continue
 
     socket.close()
